@@ -1,0 +1,24 @@
+:root {
+    --gold: #d4af37;
+    --gold-light: #f3e5ab;
+    --bg-dark: #030303;
+    --card-bg: #0b0b0b;
+    --sidebar-bg: #050505;
+    --border-color: rgba(212, 175, 55, 0.25);
+    --glow-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: #fff;
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+}

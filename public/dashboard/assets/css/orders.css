@@ -1,0 +1,91 @@
+.orders-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: var(--glow-shadow);
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.order-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: border-color 0.3s ease;
+}
+
+.order-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.02));
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+    border-left: 3px solid var(--gold);
+    border-radius: 10px;
+}
+
+.order-item:hover::before {
+    transform: translateX(100%);
+}
+
+.order-item:hover {
+    border-color: rgba(212, 175, 55, 0.4);
+}
+
+.order-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.order-item:hover .order-content {
+    transform: translateX(5px);
+}
+
+.order-info h4 {
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.order-info p {
+    color: #888;
+    font-size: 0.75rem;
+}
+
+.order-meta {
+    text-align: right;
+}
+
+.order-meta .price {
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.order-meta .status {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #4ade80;
+}

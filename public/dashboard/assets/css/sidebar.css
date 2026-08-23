@@ -1,0 +1,217 @@
+/* ==========================================
+   SIDEBAR MAIN LAYOUT STYLING
+   ================================---------- */
+.sidebar {
+    width: 290px;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    box-shadow: 15px 0 40px rgba(0, 0, 0, 0.9);
+}
+
+.sidebar-top {
+    padding: 30px 20px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* Admin Profile Section */
+.sidebar-top-profile {
+    text-align: center;
+    margin-bottom: 35px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.sidebar-top-profile img {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    object-fit: cover;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-top-profile:hover img {
+    transform: scale(1.08) rotate(5deg);
+}
+
+.sidebar-top-profile h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: #fff;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.sidebar-top-profile p {
+    color: var(--gold);
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* ==========================================
+   SIDEBAR MENU & SUBMENU STYLING
+   ================================---------- */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    margin-bottom: 8px;
+    position: relative;
+    border-radius: 10px;
+}
+
+/* Base styling for all links (Main menu & Submenu links) */
+.sidebar-menu li>a,
+.sidebar-menu .submenu li>a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 18px;
+    color: #999;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: color 0.4s ease, transform 0.3s ease;
+}
+
+/* Hover Slide Effect */
+.sidebar-menu li>a::before,
+.sidebar-menu .submenu li>a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.02));
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+    border-left: 3px solid var(--gold);
+    border-radius: 10px;
+}
+
+.sidebar-menu li>a:hover::before,
+.sidebar-menu .submenu li>a:hover::before {
+    transform: translateX(100%);
+}
+
+.sidebar-menu li>a:hover,
+.sidebar-menu .submenu li>a:hover {
+    color: var(--gold) !important;
+    transform: translateX(5px);
+}
+
+/* ==========================================
+   ACTIVE STATES (Main Menu & Submenu Items)
+   ================================---------- */
+.sidebar-menu li.active>a,
+.sidebar-menu .submenu li.active>a {
+    color: var(--gold) !important;
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.18), rgba(212, 175, 55, 0.03)) !important;
+    border-left: 4px solid var(--gold) !important;
+    transform: translateX(5px);
+    font-weight: 600;
+}
+
+.sidebar-menu li.active>a::before,
+.sidebar-menu .submenu li.active>a::before {
+    display: none !important;
+}
+
+/* ==========================================
+   SUBMENU CONTAINER & DROPDOWN STRUCTURE
+   ================================---------- */
+.sidebar-menu .has-sub.open>>a {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.sidebar-menu .submenu {
+    list-style: none;
+    padding-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 5px;
+    margin-left: 18px;
+    display: none;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 10px 10px;
+    border-left: 1px dashed rgba(212, 175, 55, 0.2);
+}
+
+.sidebar-menu .has-sub.open .submenu {
+    display: block;
+}
+
+/* Submenu specific link padding adjustment */
+.sidebar-menu .submenu li>a {
+    padding: 10px 15px !important;
+    font-size: 0.85rem;
+}
+
+/* Icons Animation */
+.sidebar-menu a i {
+    font-size: 1.1rem;
+    width: 24px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.sidebar-menu li:hover>a i {
+    transform: scale(1.25);
+}
+
+/* ==========================================
+   BOTTOM LOGOUT SECTION
+   ================================---------- */
+.sidebar-bottom-section {
+    border-top: 1px solid var(--border-color);
+    background: #020202;
+    padding: 20px;
+}
+
+.btn-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    background: rgba(239, 68, 68, 0.08);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background: #ef4444;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+    transform: translateY(-2px);
+}
+

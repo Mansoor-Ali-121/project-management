@@ -1,0 +1,59 @@
+/* Dashboard Footer */
+.dashboard-footer {
+    margin-top: 40px;
+    padding: 22px 30px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    box-shadow: var(--glow-shadow);
+}
+
+.dashboard-footer p {
+    color: #888;
+    font-size: 0.82rem;
+    letter-spacing: 0.5px;
+}
+
+.dashboard-footer p span {
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+}
+
+.footer-dev {
+    color: var(--gold) !important;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-family: 'Cinzel', serif;
+}
+
+/* Custom Scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) rgba(20, 20, 20, 0.8);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(15, 15, 15, 0.9);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #d4af37, #aa8c2c);
+    border-radius: 4px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #e6c547, #c5a034);
+}

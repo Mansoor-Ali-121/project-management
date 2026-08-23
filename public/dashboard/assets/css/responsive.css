@@ -1,0 +1,34 @@
+@media(max-width: 992px) {
+    .sidebar {
+        width: 75px;
+    }
+
+    .sidebar-top-profile h3,
+    .sidebar-top-profile p,
+    .sidebar-menu span,
+    .btn-logout span {
+        display: none;
+    }
+
+    .sidebar-top-profile img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .main-content {
+        margin-left: 75px;
+        padding: 20px;
+    }
+
+    .analytics-grid,
+    .extra-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 768px) {
+    .dashboard-footer {
+        flex-direction: column;
+        text-align: center;
+    }
+}

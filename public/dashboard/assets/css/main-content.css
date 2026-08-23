@@ -1,0 +1,77 @@
+.main-content {
+    margin-left: 290px;
+    flex: 1;
+    padding: 40px;
+    background: radial-gradient(circle at 50% 0%, #161105 0%, #030303 75%);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Executive Header Banner */
+.welcome-banner {
+    background: linear-gradient(135deg, #0f0d07 0%, #070707 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 35px 40px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    box-shadow: var(--glow-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-banner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--gold);
+}
+
+.welcome-banner h1 {
+    font-family: 'Cinzel', serif;
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.welcome-banner h1 span {
+    color: var(--gold);
+}
+
+.welcome-banner p {
+    color: #aaa;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.btn-gold {
+    background: var(--gold);
+    color: #000;
+    font-weight: 700;
+    padding: 14px 30px;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    clip-path: polygon(8% 0, 100% 0, 92% 100%, 0% 100%);
+    font-size: 0.82rem;
+}
+
+.btn-gold:hover {
+    background: #fff;
+    box-shadow: 0 0 25px var(--gold);
+    transform: scale(1.05);
+}
