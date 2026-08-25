@@ -18,7 +18,7 @@
                     <p>Managing full-stack web applications, database migrations, and client architectures.</p>
                 </div>
                 <div>
-                    <a href="{{ route('projects.index') }}" class="btn-gold">View Projects</a>
+                    <a href="{{ route('projects.show') }}" class="btn-gold">View Projects</a>
                 </div>
             </div>
 
@@ -138,7 +138,7 @@
                 <div class="orders-card">
                     <div class="section-title">
                         <span><i class="fas fa-tasks"></i> Recent Tasks & Repos</span>
-                        <a href="{{ route('projects.index') }}" style="font-size: 0.8rem; color: var(--gold); text-decoration: none;">View All</a>
+                        <a href="{{ route('projects.show') }}" style="font-size: 0.8rem; color: var(--gold); text-decoration: none;">View All</a>
                     </div>
                     <div class="orders-list">
                         <div class="order-item">

@@ -1,59 +1,295 @@
 @extends('template')
 
 @section('main-content')
-    <div class="container-fluid px-4 py-4">
-        <div class="card bg-dark text-light border-warning shadow-lg p-4" style="background-color: #121212 !important;">
-            <h2 class="text-warning mb-4">Add New Project</h2>
+    <style>
+        .custom-form-container {
+            padding: 20px 40px;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-            <form action="{{ route('projects.add') }}" method="POST">
+        .custom-form-card {
+            background-color: #121212;
+            border: 1px solid #d4af37;
+            border-radius: 14px;
+            padding: 30px;
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .custom-form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .custom-form-title {
+            color: #d4af37;
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Cinzel', serif;
+        }
+
+        .custom-form-subtitle {
+            color: #888;
+            font-size: 13px;
+            margin: 5px 0 0 0;
+        }
+
+        .custom-back-btn {
+            background: transparent;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 6px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .custom-back-btn:hover {
+            background: #d4af37;
+            color: #121212;
+        }
+
+        /* Alert Box Styles */
+        .alert-box {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert-danger {
+            background-color: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #ff6b6b;
+        }
+
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #51cf66;
+        }
+
+        .custom-form-group {
+            margin-bottom: 20px;
+        }
+
+        .custom-form-label {
+            display: block;
+            color: #d4af37;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .custom-form-control {
+            width: 100%;
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .custom-form-control:focus {
+            border-color: #d4af37;
+        }
+
+        .custom-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .custom-col {
+            flex: 1;
+        }
+
+        .custom-submit-container {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: right;
+        }
+
+        .custom-submit-btn {
+            background-color: #d4af37;
+            color: #121212;
+            border: none;
+            padding: 10px 28px;
+            font-weight: bold;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .custom-submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .custom-submit-btn:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+        }
+    </style>
+
+    <div class="custom-form-container">
+
+        <!-- Main Form Card -->
+        <div class="custom-form-card">
+
+            <!-- Header Section -->
+            <div class="custom-form-header">
+                <div>
+                    <h2 class="custom-form-title">Add New Project</h2>
+                    <p class="custom-form-subtitle">Fill in the details below to deploy a new community impact project.</p>
+                </div>
+                <a href="{{ route('projects.show') }}" class="custom-back-btn">&larr; Back to Projects</a>
+            </div>
+
+            <!-- Inline Alert Message Box (Top) -->
+            <div id="form-alert" class="alert-box"></div>
+
+            <!-- Form Start -->
+            <form id="ajax-project-form">
                 @csrf
 
-                <div class="mb-3">
-                    <label for="title" class="form-label text-warning">Project Title</label>
-                    <input type="text" class="form-control bg-black text-light border-warning" id="title"
-                        name="title" required>
+                <!-- Title -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label">Project Title</label>
+                    <input type="text" name="title" class="custom-form-control"
+                        placeholder="e.g. Clean Rawalpindi Campaign" required>
                 </div>
 
-                <div class="mb-3">
-                    <label for="description" class="form-label text-warning">Description</label>
-                    <textarea class="form-control bg-black text-light border-warning" id="description" name="description" rows="3"
-                        required></textarea>
+                <!-- Description -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label">Description</label>
+                    <textarea name="description" rows="3" class="custom-form-control"
+                        placeholder="Enter brief details about the project goals and objectives..." required style="resize: vertical;"></textarea>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="category" class="form-label text-warning">Category</label>
-                        <input type="text" class="form-control bg-black text-light border-warning" id="category"
-                            name="category" required>
+                <!-- Row 1: Category & Location -->
+                <div class="custom-row">
+                    <div class="custom-col">
+                        <label class="custom-form-label">Category</label>
+                        <input type="text" name="category" class="custom-form-control"
+                            placeholder="e.g. Environment, Education" required>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="location" class="form-label text-warning">Location</label>
-                        <input type="text" class="form-control bg-black text-light border-warning" id="location"
-                            name="location" required>
+                    <div class="custom-col">
+                        <label class="custom-form-label">Location</label>
+                        <input type="text" name="location" class="custom-form-control"
+                            placeholder="e.g. Rawalpindi, Islamabad" required>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="status" class="form-label text-warning">Status</label>
-                        <select class="form-control bg-black text-light border-warning" id="status" name="status">
+                <!-- Row 2: Status & Deadline -->
+                <div class="custom-row" style="margin-bottom: 25px;">
+                    <div class="custom-col">
+                        <label class="custom-form-label">Status</label>
+                        <select name="status" class="custom-form-control">
                             <option value="pending">Pending</option>
                             <option value="approved">Approved</option>
                             <option value="rejected">Rejected</option>
                             <option value="completed">Completed</option>
                         </select>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="deadline" class="form-label text-warning">Deadline</label>
-                        <input type="date" class="form-control bg-black text-light border-warning" id="deadline"
-                            name="deadline" required>
+                    <div class="custom-col">
+                        <label class="custom-form-label">Deadline</label>
+                        <input type="date" name="deadline" class="custom-form-control" style="color-scheme: dark;"
+                            required>
                     </div>
                 </div>
 
-                <input type="hidden" name="user_id" value="1">
+                <input type="hidden" name="user_id" value="{{ auth()->id() ?? 1 }}">
 
-                <button type="submit" class="btn btn-warning text-dark fw-bold px-4 py-2 mt-3">Save Project</button>
+                <!-- Submit Button -->
+                <div class="custom-submit-container">
+                    <button type="submit" id="submit-btn" class="custom-submit-btn">Save Project</button>
+                </div>
+
             </form>
         </div>
     </div>
+
+    <!-- JavaScript for Fetch API & Inline Loader/Errors -->
+    <script>
+        document.getElementById('ajax-project-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = this;
+            const submitBtn = document.getElementById('submit-btn');
+            const alertBox = document.getElementById('form-alert');
+
+            // Hide previous alerts & set loader on button
+            alertBox.style.display = 'none';
+            alertBox.className = 'alert-box';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Saving... <i class="fas fa-spinner fa-spin"></i>';
+
+            const formData = new FormData(form);
+
+            fetch("{{ route('projects.add') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                .then(response => response.json().then(data => ({
+                    status: response.status,
+                    body: data
+                })))
+                .then(res => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Save Project';
+
+                    if (res.status >= 200 && res.status < 300) {
+                        // Success
+                        alertBox.className = 'alert-box alert-success';
+                        alertBox.style.display = 'block';
+                        alertBox.innerText = res.body.message || 'Project successfully created!';
+                        form.reset();
+
+                        // Optional: Redirect after 1.5 seconds to list page
+                        setTimeout(() => {
+                            window.location.href = "{{ route('projects.show') }}";
+                        }, 1500);
+
+                    } else {
+                        // Validation or Server Error
+                        alertBox.className = 'alert-box alert-danger';
+                        alertBox.style.display = 'block';
+
+                        if (res.body.errors) {
+                            let errorMsg = '';
+                            for (let key in res.body.errors) {
+                                errorMsg += res.body.errors[key][0] + '<br>';
+                            }
+                            alertBox.innerHTML = errorMsg;
+                        } else {
+                            alertBox.innerText = res.body.message || 'Something went wrong, please try again.';
+                        }
+                    }
+                })
+                .catch(error => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Save Project';
+
+                    alertBox.className = 'alert-box alert-danger';
+                    alertBox.style.display = 'block';
+                    alertBox.innerText = 'A network error occurred. Please check your connection.';
+                    console.error('Error:', error);
+                });
+        });
+    </script>
 @endsection

@@ -37,31 +37,33 @@ Route::get('/admin-dashboard', [DashboardController::class, 'index'])->name('das
 // ==========================================
 
 // --- Projects Routes ---
-Route::get('/projects', [ProjectController::class, 'index'])->name('projects.add');
-Route::post('/projects', [ProjectController::class, 'store']);
-Route::get('/projects/{id}', [ProjectController::class, 'show'])->name('projects.show');
-Route::get('/projects/{id}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
-Route::put('/projects/{id}', [ProjectController::class, 'update'])->name('projects.update');
-Route::delete('/projects/{id}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+Route::prefix('projects')->group(function () {
+    Route::get('/add', [ProjectController::class, 'index'])->name('projects.add');
+    Route::post('/add', [ProjectController::class, 'store']);
+    Route::get('/show', [ProjectController::class, 'show'])->name('projects.show');
+    Route::get('/edit/{id}', [ProjectController::class, 'edit'])->name('projects.edit');
+    Route::put('/update/{id}', [ProjectController::class, 'update'])->name('projects.update');
+    Route::delete('/delete/{id}', [ProjectController::class, 'destroy'])->name('projects.delete');
+});
 
 // --- Project Applications Routes ---
-Route::get('/applications', [ProjectApplicationController::class, 'index'])->name('applications.index');
-Route::get('/applications/create', [ProjectApplicationController::class, 'create'])->name('applications.create');
-Route::post('/applications', [ProjectApplicationController::class, 'store'])->name('applications.store');
-Route::get('/applications/{id}', [ProjectApplicationController::class, 'show'])->name('applications.show');
-Route::get('/applications/{id}/edit', [ProjectApplicationController::class, 'edit'])->name('applications.edit');
-Route::put('/applications/{id}', [ProjectApplicationController::class, 'update'])->name('applications.update');
-Route::delete('/applications/{id}', [ProjectApplicationController::class, 'destroy'])->name('applications.destroy');
+Route::prefix('applications')->group(function () {
+    Route::get('/add', [ProjectApplicationController::class, 'index'])->name('applications.add'); // <-- 'add' se 'index' kar diya
+    Route::post('/add', [ProjectApplicationController::class, 'store']);
+    Route::get('/show', [ProjectApplicationController::class, 'show'])->name('applications.show');
+    Route::get('/edit/{id}', [ProjectApplicationController::class, 'edit'])->name('applications.edit');
+    Route::put('/update/{id}', [ProjectApplicationController::class, 'update'])->name('applications.update');
+    Route::delete('/delete/{id}', [ProjectApplicationController::class, 'destroy'])->name('applications.delete');
+
+    Route::get('/active-volunteers', [ProjectApplicationController::class, 'activeVolunteers'])->name('applications.active');
+});
 
 // --- Tasks Routes ---
-Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
-Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
-Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
-Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('tasks.show');
-Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
-Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
-Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
-
+Route::prefix('tasks')->name('tasks.')->group(function () {
+    Route::get('/show', [TaskController::class, 'show'])->name('show');
+    Route::get('/add', [TaskController::class, 'index'])->name('add');
+    Route::post('/store', [TaskController::class, 'store'])->name('add');
+});
 // --- Users Management Routes ---
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
