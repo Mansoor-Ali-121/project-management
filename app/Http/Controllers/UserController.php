@@ -132,8 +132,8 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         try {
-            // $this->userService->deleteUser($id);
-            return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+            $this->userService->deleteUser($id);
+            return redirect()->route('users.show')->with('success', 'User deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }

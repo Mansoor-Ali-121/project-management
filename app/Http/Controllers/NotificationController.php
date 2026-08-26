@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -11,7 +12,9 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        //
+        $notifications = Notification::latest()->get();
+
+        return view('dashboard.notifications.index', compact('notifications'));
     }
 
     /**

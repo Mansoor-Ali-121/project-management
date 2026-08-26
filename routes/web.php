@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ImpactReportController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProjectApplicationController;
 use App\Http\Controllers\ProjectController;
@@ -14,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 // ==========================================
 Route::get('/', [DashboardController::class, 'index'])->name('home');
 
+// Impacts reports
+Route::get('/impact-reports', [ImpactReportController::class, 'index'])->name('impact.reports');
+// Code in Impact controller 
+Route::get('/notifications', [ImpactReportController::class, 'notifications'])->name('notifications.index');
 // ==========================================
 // 2. AUTHENTICATION ROUTES
 // ==========================================

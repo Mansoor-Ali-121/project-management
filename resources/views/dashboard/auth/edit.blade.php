@@ -226,7 +226,7 @@
                     </div>
                 </div>
 
-                <!-- Row 3: Role & Profile Picture -->
+                <!-- Row 3: Role & Status -->
                 <div class="custom-row">
                     <div class="custom-col">
                         <label class="custom-form-label">User Role</label>
@@ -244,6 +244,22 @@
                         @enderror
                     </div>
                     <div class="custom-col">
+                        <label class="custom-form-label">Status</label>
+                        <select name="status" class="custom-form-control" style="cursor: pointer;">
+                            <option value="active" {{ old('status', $user->status) == 'active' ? 'selected' : '' }}>Active
+                            </option>
+                            <option value="inactive" {{ old('status', $user->status) == 'inactive' ? 'selected' : '' }}>Inactive
+                            </option>
+                        </select>
+                        @error('status')
+                            <span class="error-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Row 4: Profile Picture -->
+                <div class="custom-row">
+                    <div class="custom-col" style="flex: 1;">
                         <label class="custom-form-label">Profile Picture</label>
                         <input type="file" name="profile_picture" class="custom-form-control" style="padding: 9px 15px;">
                         @error('profile_picture')
@@ -274,7 +290,7 @@
 
                 <!-- Submit Button Container -->
                 <div class="custom-submit-container">
-                    <button type="submit" class="custom-submit-btn">Update User</button>
+                    <button type="겠다는" type="submit" class="custom-submit-btn">Update User</button>
                 </div>
 
             </form>

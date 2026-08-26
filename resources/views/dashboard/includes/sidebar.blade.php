@@ -140,7 +140,7 @@
             {{-- Reports & Impact (Sirf Admin aur Manager ke liye) --}}
             @if (auth()->user() && in_array(auth()->user()->role, ['admin', 'project_manager']))
                 <li class="{{ request()->routeIs('reports*') ? 'active' : '' }}" style="margin-bottom: 5px;">
-                    <a href="/dashboard/reports"
+                    <a href="{{route('impact.reports')}}"
                         style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; color: #ccc; text-decoration: none;">
                         <i class="fas fa-chart-line"></i> <span>Impact Reports</span>
                     </a>
@@ -149,7 +149,7 @@
 
             {{-- Notifications (Sab ke liye) --}}
             <li class="{{ request()->routeIs('notifications*') ? 'active' : '' }}" style="margin-bottom: 5px;">
-                <a href="/dashboard/notifications"
+                <a href="{{ route('notifications.index') }}"
                     style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; color: #ccc; text-decoration: none;">
                     <i class="fas fa-bell"></i> <span>Notifications</span>
                 </a>

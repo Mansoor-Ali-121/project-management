@@ -66,8 +66,8 @@ class UserService
             'city'     => 'nullable|string|max:100',
             'skills'   => 'nullable|string|max:255',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'role'     => 'required|in:user,admin',
-            'is_active'=> 'required|boolean',
+            'role'     => 'required|in:student,project_manager,admin',
+            'status'=> 'required|in:active,inactive',
         ]);
 
         if ($request->filled('password')) {

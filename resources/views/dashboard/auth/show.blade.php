@@ -71,19 +71,20 @@
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .custom-table th {
             color: #d4af37;
             background-color: #1a1a1a;
-            padding: 12px 15px;
+            padding: 12px 12px;
             border-bottom: 2px solid #333;
             font-weight: 600;
+            white-space: nowrap;
         }
 
         .custom-table td {
-            padding: 12px 15px;
+            padding: 12px 12px;
             border-bottom: 1px solid #222;
             color: #ddd;
             vertical-align: middle;
@@ -95,11 +96,12 @@
 
         /* Status Badges / Roles */
         .badge {
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             text-transform: capitalize;
+            display: inline-block;
         }
 
         .badge-admin {
@@ -122,10 +124,22 @@
             border: 1px solid #6c757d;
         }
 
+        .badge-active {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+
+        .badge-inactive {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
         /* Action Buttons */
         .action-btns {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
         }
 
@@ -133,9 +147,9 @@
             background-color: rgba(23, 162, 184, 0.15);
             color: #17a2b8;
             border: 1px solid #17a2b8;
-            padding: 5px 10px;
+            padding: 5px 8px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             text-decoration: none;
             transition: 0.3s;
         }
@@ -149,9 +163,9 @@
             background-color: rgba(220, 53, 69, 0.15);
             color: #dc3545;
             border: 1px solid #dc3545;
-            padding: 5px 10px;
+            padding: 5px 8px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -321,10 +335,14 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Picture</th> <!-- Naya column -->
+                            <th>Picture</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Phone</th>
+                            <th>City</th>
                             <th>Role</th>
+                            <th>Status</th>
+                            <th>Skills</th>
                             <th>Joined Date</th>
                             <th>Action</th>
                         </tr>
@@ -332,16 +350,16 @@
                     <tbody>
                         @forelse($users as $user)
                             <tr>
-                                <td>{{ $user->id }}</td> <!-- ya $user->id -->
+                                <td>{{ $user->id }}</td>
 
                                 <!-- User Profile Picture Column -->
                                 <td>
                                     @if (!empty($user->profile_picture))
                                         <img src="{{ asset($user->profile_picture) }}" alt="Profile"
-                                            style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #d4af37;">
+                                            style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid #d4af37;">
                                     @else
                                         <div
-                                            style="width: 40px; height: 40px; border-radius: 50%; background-color: #222; color: #d4af37; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; border: 1px solid #444;">
+                                            style="width: 35px; height: 35px; border-radius: 50%; background-color: #222; color: #d4af37; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; border: 1px solid #444;">
                                             {{ strtoupper(substr($user->name, 0, 1)) }}
                                         </div>
                                     @endif
@@ -349,10 +367,21 @@
 
                                 <td style="font-weight: 600; color: #fff;">{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>{{ $user->phone ?? 'N/A' }}</td>
+                                <td>{{ $user->city ?? 'N/A' }}</td>
                                 <td>
                                     <span class="badge badge-{{ strtolower($user->role) }}">
-                                        {{ ucfirst($user->role) }}
+                                        {{ ucfirst(str_replace('_', ' ', $user->role)) }}
                                     </span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-{{ strtolower($user->status ?? 'active') }}">
+                                        {{ ucfirst($user->status ?? 'Active') }}
+                                    </span>
+                                </td>
+                                <td style="max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                    title="{{ $user->skills }}">
+                                    {{ $user->skills ?? 'N/A' }}
                                 </td>
                                 <td>{{ $user->created_at?->format('Y-m-d') ?? 'N/A' }}</td>
                                 <td>
@@ -375,7 +404,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="empty-state">
+                                <td colspan="11" class="empty-state">
                                     No users found matching your criteria.
                                 </td>
                             </tr>
