@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -79,19 +80,37 @@ class UserController extends Controller
     /**
      * Display the specified resource (Single user view blade).
      */
-    public function show(string $id)
-    {
-        // $user = $this->userService->getUserById($id);
-        // return view('dashboard.users.show', compact('user'));
+    public function show(Request $request)
+{
+    $query = User::query();
+
+    // Agar search input mein kuch likha ho
+    if ($request->filled('search')) {
+        $search = $request->input('search');
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%");
+        });
     }
+
+    // Agar role select kiya gaya ho
+    if ($request->filled('role')) {
+        $query->where('role', $request->input('role'));
+    }
+
+    // Results fetch karein pagination ke sath
+    $users = $query->paginate(10);
+
+    return view('dashboard.auth.show', compact('users'));
+}
 
     /**
      * Show the form for editing the specified resource (Edit blade).
      */
     public function edit(string $id)
     {
-        // $user = $this->userService->getUserById($id);
-        // return view('dashboard.users.edit', compact('user'));
+        $user = $this->userService->getUserById($id);
+        return view('dashboard.auth.edit', compact('user'));
     }
 
     /**
@@ -100,8 +119,8 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            // $this->userService->updateUser($request, $id);
-            return redirect()->route('users.index')->with('success', 'User updated successfully.');
+            $this->userService->updateUser($request, $id);
+            return redirect()->route('users.show')->with('success', 'User updated successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
         }

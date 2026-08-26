@@ -149,7 +149,7 @@
                 </div>
                 <div>
                     {{-- Agar task list ka route mojood hai toh yahan dein, warna apni marzi ka route lagayein --}}
-                    <a href="{{ route('tasks.add') }}" class="btn-back">&larr; Back to Tasks</a>
+                    <a href="{{ route('tasks.show') }}" class="btn-back">&larr; Back to Tasks</a>
                 </div>
             </div>
 

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Services\TaskService;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
+use App\Services\TaskService;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -25,10 +26,38 @@ class TaskController extends Controller
         return view('dashboard.tasks.add', compact('projects', 'volunteers'));
     }
 
-    public function show()
+    public function show(Request $request)
     {
-        $tasks = $this->taskService->getAllTasks();
+        $query = Task::with(['project', 'assignee']);
+
+        // Search by title filter
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $tasks = $query->paginate(10);
+
         return view('dashboard.tasks.show', compact('tasks'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:todo,in_progress,completed',
+        ]);
+
+        $task = Task::findOrFail($id);
+
+        $task->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Status updated successfully!']);
     }
 
     public function create()

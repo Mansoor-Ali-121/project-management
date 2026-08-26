@@ -17,7 +17,7 @@ Route::get('/user', function (Request $request) {
 Route::apiResource('projects', ProjectController::class)->names('api.projects');
 
 // User  controller ke liye bhi same cheez kar sakte hain
-Route::apiResource('users', UserController::class);
+Route::apiResource('users', UserController::class)->names('api.users');
 
 // Application / Volunteer API Routes
 Route::apiResource('applications', ApplicationController::class)->names('api.applications');

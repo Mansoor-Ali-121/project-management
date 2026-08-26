@@ -7,16 +7,12 @@ use App\Http\Controllers\ProjectApplicationController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
 // 1. PUBLIC WEBSITE ROUTES (For Visitors)
 // ==========================================
-Route::get('/', [WebController::class, 'index'])->name('home');
-Route::get('/about', [WebController::class, 'about'])->name('about');
-Route::get('/projects-list', [WebController::class, 'projects'])->name('public.projects');
-Route::get('/contact', [WebController::class, 'contact'])->name('contact');
+Route::get('/', [DashboardController::class, 'index'])->name('home');
 
 // ==========================================
 // 2. AUTHENTICATION ROUTES
@@ -25,9 +21,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/profile', [UserController::class, 'profile'])->name('profile');
 
-// Registration Routes (Using UserController normal routes)
-Route::get('/register', [UserController::class, 'index'])->name('register.add');
-Route::post('/register', [UserController::class, 'store']);
+
+
 Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
 
 Route::get('/admin-dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -62,16 +57,17 @@ Route::prefix('applications')->group(function () {
 Route::prefix('tasks')->name('tasks.')->group(function () {
     Route::get('/show', [TaskController::class, 'show'])->name('show');
     Route::get('/add', [TaskController::class, 'index'])->name('add');
-    Route::post('/store', [TaskController::class, 'store'])->name('add');
+    Route::post('/add', [TaskController::class, 'store']);
+    Route::patch('/{id}/update-status', [TaskController::class, 'updateStatus'])->name('updateStatus');
 });
 // --- Users Management Routes ---
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
-Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-Route::post('/users', [UserController::class, 'store'])->name('users.store');
-Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
-Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
-Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+// Registration Routes (Using UserController normal routes)
+Route::get('/register', [UserController::class, 'index'])->name('register.add');
+Route::post('/register', [UserController::class, 'store']);
+Route::get('/users/show', [UserController::class, 'show'])->name('users.show');
+Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
+Route::put('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
+Route::delete('/users/delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
 
 // --- Notifications Routes ---
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

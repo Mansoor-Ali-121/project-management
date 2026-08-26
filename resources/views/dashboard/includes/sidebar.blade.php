@@ -13,7 +13,7 @@
             {{-- Dashboard (Sab ke liye) --}}
             <li class="{{ request()->routeIs('dashboard*') || request()->is('/') ? 'active' : '' }}"
                 style="margin-bottom: 5px;">
-                <a href="/dashboard"
+                <a href="{{ route('dashboard') }}"
                     style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; color: #ccc; text-decoration: none;">
                     <i class="fas fa-chart-pie"></i> <span>Dashboard</span>
                 </a>
@@ -94,32 +94,33 @@
             @endif
 
             {{-- Tasks Management --}}
-            <li class="has-sub {{ request()->routeIs('tasks*') ? 'active open' : '' }}" style="margin-bottom: 5px;">
+            <li class="has-sub {{ request()->routeIs('tasks.*') ? 'active open' : '' }}" style="margin-bottom: 5px;">
                 <a href="javascript:void(0);" onclick="toggleSubmenu('tasksSubmenu')" class="dropdown-toggle"
                     style="display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; text-decoration: none; cursor: pointer;">
                     <div style="display: flex; align-items: center; gap: 15px;">
                         <i class="fas fa-tasks"
-                            style="color: {{ request()->routeIs('tasks*') ? '#d4af37' : 'inherit' }};"></i>
-                        <span style="color: {{ request()->routeIs('tasks*') ? '#d4af37' : 'inherit' }};">Tasks</span>
+                            style="color: {{ request()->routeIs('tasks.*') ? '#d4af37' : 'inherit' }};"></i>
+                        <span style="color: {{ request()->routeIs('tasks.*') ? '#d4af37' : 'inherit' }};">Tasks</span>
                     </div>
                     <i class="fas fa-chevron-down" style="font-size: 0.75rem; color: #ccc;"></i>
                 </a>
                 <ul class="submenu" id="tasksSubmenu"
-                    style="list-style: none; padding-left: 20px; {{ request()->routeIs('tasks*') ? 'display: block;' : 'display: none;' }}">
+                    style="list-style: none; padding-left: 20px; {{ request()->routeIs('tasks.*') ? 'display: block;' : 'display: none;' }}">
 
                     {{-- Assign Tasks (Sirf Admin/Manager ke liye) --}}
                     @if (auth()->user() && in_array(auth()->user()->role, ['admin', 'manager']))
                         <li style="margin-bottom: 5px;">
-                            <a href="{{route('tasks.add')}}"
-                                style="padding: 8px 10px; display: block; color: #ccc; text-decoration: none;">Assign
-                                Tasks</a>
+                            <a href="{{ route('tasks.add') }}"
+                                style="padding: 8px 10px; display: block; color: {{ request()->routeIs('tasks.add') ? '#d4af37' : '#ccc' }}; text-decoration: none; font-weight: {{ request()->routeIs('tasks.add') ? 'bold' : 'normal' }};">
+                                Assign Tasks
+                            </a>
                         </li>
                     @endif
 
                     {{-- Track Progress --}}
                     <li>
-                        <a href="/dashboard/tasks/progress"
-                            style="padding: 8px 10px; display: block; color: #ccc; text-decoration: none;">
+                        <a href="{{ route('tasks.show') }}"
+                            style="padding: 8px 10px; display: block; color: {{ request()->routeIs('tasks.show') ? '#d4af37' : '#ccc' }}; text-decoration: none; font-weight: {{ request()->routeIs('tasks.show') ? 'bold' : 'normal' }};">
                             {{ auth()->user()?->role === 'student' ? 'My Tasks' : 'Track Progress' }}
                         </a>
                     </li>
@@ -129,7 +130,7 @@
             {{-- Users / Members (Sirf Admin ke liye) --}}
             @if (auth()->user() && auth()->user()->role === 'admin')
                 <li class="{{ request()->routeIs('users*') ? 'active' : '' }}" style="margin-bottom: 5px;">
-                    <a href="/dashboard/users"
+                    <a href="{{ route('users.show') }}"
                         style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; color: #ccc; text-decoration: none;">
                         <i class="fas fa-users"></i> <span>Manage Users</span>
                     </a>
