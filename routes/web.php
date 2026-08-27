@@ -17,8 +17,10 @@ Route::get('/', [DashboardController::class, 'index'])->name('home');
 
 // Impacts reports
 Route::get('/impact-reports', [ImpactReportController::class, 'index'])->name('impact.reports');
-// Code in Impact controller 
-Route::get('/notifications', [ImpactReportController::class, 'notifications'])->name('notifications.index');
+
+//Notification controller 
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
 // ==========================================
 // 2. AUTHENTICATION ROUTES
 // ==========================================

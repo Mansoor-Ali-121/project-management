@@ -147,9 +147,16 @@
                     <h2 class="custom-notification-title">System Notifications</h2>
                     <p class="custom-notification-subtitle">Stay updated with recent activities, alerts, and system logs.</p>
                 </div>
-                <button class="custom-action-btn">
-                    <i class="fas fa-check-double"></i> Mark All as Read
-                </button>
+                
+                {{-- Mark All as Read Button (Form ke zariye active kiya hai) --}}
+                @if($notifications->where('is_read', false)->count() > 0)
+                    <form action="{{ route('notifications.markAllRead') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="custom-action-btn">
+                            <i class="fas fa-check-double"></i> Mark All as Read
+                        </button>
+                    </form>
+                @endif
             </div>
 
             <div class="notification-list">
@@ -170,7 +177,8 @@
                     </div>
                 @empty
                     <div class="empty-notifications">
-                        No new notifications found in the database.
+                        <i class="fas fa-bell-slash" style="font-size: 28px; margin-bottom: 10px; color: #555;"></i>
+                        <p>No new notifications found.</p>
                     </div>
                 @endforelse
             </div>

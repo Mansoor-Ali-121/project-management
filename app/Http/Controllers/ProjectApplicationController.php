@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use App\Models\ProjectApplication;
 use App\Services\ApplicationService;
 use Illuminate\Http\Request;
@@ -97,21 +98,34 @@ class ProjectApplicationController extends Controller
     /**
      * Update the specified resource in storage (Approve or Reject application)
      */
+    // Ensure this is imported at the top of your controller
+
     public function update(Request $request, string $id)
     {
         $request->validate([
             'status' => 'required|in:pending,approved,rejected',
         ]);
 
+        // Application ke sath project relation load karein (agar relation ka naam 'project' hai)
         $application = $this->applicationService->updateStatus($id, $request->status);
 
         if (!$application) {
             return back()->with('error', 'Application not found.');
         }
 
+        // Project ka title nikal lete hain (check kar lein agar relation ka naam project ya kuch aur hai)
+        $projectTitle = $application->project->title ?? 'the project';
+
+        // Ab notification mein project ka naam bhi shamil hoga
+        Notification::create([
+            'user_id' => $application->user_id,
+            'title'   => 'Application ' . ucfirst($request->status),
+            'message' => 'Your application for "' . $projectTitle . '" has been ' . $request->status . '.',
+            'is_read' => false,
+        ]);
+
         return redirect()->back()->with('success', 'Application status updated successfully.');
     }
-
     /**
      * Remove the specified resource from storage.
      */
