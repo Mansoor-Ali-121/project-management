@@ -27,7 +27,7 @@ class ProjectService
             'description' => 'required|string',
             'category' => 'required|string|max:100',
             'location' => 'required|string|max:255',
-            'status' => 'required|in:pending,active,completed',
+            'status' => 'required|in:approved,reject,completed',
             'deadline' => 'required|date',
         ]);
 

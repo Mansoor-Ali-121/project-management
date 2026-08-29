@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use Illuminate\Http\Request;
 use App\Services\ProjectService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -56,11 +57,12 @@ class ProjectController extends Controller
     {
         $query = Project::query();
 
-        // Agar user Student hai (admin ya project manager nahi hai), toh sirf Approved projects dikhao
-        if (auth()->check() && !(auth()->user()->role === 'admin' || auth()->user()->role === 'project_manager' || auth()->user()->is_admin)) {
-            $query->where('status', 'Approved');
+        // Agar user login hai aur woh admin ya project_manager nahi hai, toh sirf Approved projects dikhao
+        if (Auth::check() && (Auth::user()->role === 'admin' || Auth::user()->role === 'project_manager' || Auth::user()->is_admin)) {
+            // Admin / Manager ke liye saare projects ya filtering aage chalegi
+        } else {
+            $query->where('status', 'approved');
         }
-
         // Baaki aapki filtering logic (Search, Category waghera)
         if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
@@ -74,8 +76,8 @@ class ProjectController extends Controller
             $query->where('location', 'like', '%' . $request->location . '%');
         }
 
-        // Status filter agar student ke ilawa koi aur use kar raha ho
-        if ($request->filled('status') && auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->role === 'project_manager' || auth()->user()->is_admin)) {
+        // Status filter agar admin ya project manager use kar raha ho
+        if ($request->filled('status') && Auth::check() && (Auth::user()->role === 'admin' || Auth::user()->role === 'project_manager' || Auth::user()->is_admin)) {
             $query->where('status', $request->status);
         }
 

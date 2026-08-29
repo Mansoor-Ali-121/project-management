@@ -21,14 +21,15 @@ class NotificationController extends Controller
         return view('dashboard.notifications.index', compact('notifications'));
     }
 
+    // Delete all notification 
     public function markAllRead()
     {
-        Notification::where('user_id', Auth::id())
-            ->where('is_read', false)
-            ->update(['is_read' => true]);
+        // Current logged-in user (admin ya student) ki sari notifications delete kar dein
+        Notification::where('user_id', Auth::id())->delete();
 
-        return redirect()->back()->with('success', 'All notifications marked as read.');
+        return redirect()->back()->with('success', 'All notifications cleared successfully.');
     }
+
 
     /**
      * Show the form for creating a new resource.

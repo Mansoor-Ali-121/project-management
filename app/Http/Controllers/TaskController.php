@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -28,7 +29,14 @@ class TaskController extends Controller
 
     public function show(Request $request)
     {
+        $user = Auth::user();
         $query = Task::with(['project', 'assignee']);
+
+        // Agar user admin ya project manager nahi hai, toh sirf usay assigned tasks dikhao
+        if ($user->role !== 'admin' && $user->role !== 'project_manager' && !$user->is_admin) {
+            // Yahan 'assignee_id' ki jagah 'assigned_to' likhein jo aapke Model mein hai
+            $query->where('assigned_to', $user->id);
+        }
 
         // Search by title filter
         if ($request->filled('search')) {

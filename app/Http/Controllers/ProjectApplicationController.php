@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewNotificationEvent;
 use App\Models\Notification;
+use App\Models\Project;
 use App\Models\ProjectApplication;
+use App\Models\User;
 use App\Services\ApplicationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectApplicationController extends Controller
 {
@@ -50,6 +54,29 @@ class ProjectApplicationController extends Controller
         if (!$result['success']) {
             return back()->with('error', $result['message']);
         }
+
+        // --- YAHAN NOTIFICATION OR BROADCAST KA CODE ADD KAREIN ---
+        // 1. Project ki details nikal lein (agar result mein project ya application object aa raha hai)
+        $project = Project::find($request->project_id);
+        $projectTitle = $project->title ?? 'the project';
+        $studentName = Auth::user()->name;
+
+        // 2. Sabhi admins aur project managers ko find karein
+        $adminsAndManagers = \App\Models\User::whereIn('role', ['admin', 'project_manager'])->get();
+
+        // 3. Har ek ko notification bhejein aur live broadcast karein
+        foreach ($adminsAndManagers as $admin) {
+            $notification = Notification::create([
+                'user_id' => $admin->id,
+                'title'   => 'New Project Application',
+                'message' => $studentName . ' has applied for the project "' . $projectTitle . '".',
+                'is_read' => false,
+            ]);
+
+            // Reverb live broadcast
+            broadcast(new NewNotificationEvent($notification));
+        }
+        // -----------------------------------------------------------
 
         return redirect()->back()->with('success', 'Application submitted successfully.');
     }
@@ -102,27 +129,29 @@ class ProjectApplicationController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $request->validate([
-            'status' => 'required|in:pending,approved,rejected',
-        ]);
-
-        // Application ke sath project relation load karein (agar relation ka naam 'project' hai)
-        $application = $this->applicationService->updateStatus($id, $request->status);
+        $application = ProjectApplication::find($id);
 
         if (!$application) {
             return back()->with('error', 'Application not found.');
         }
 
-        // Project ka title nikal lete hain (check kar lein agar relation ka naam project ya kuch aur hai)
+        // 1. Status update karne ki aapki jo bhi logic hai (e.g., update status)
+        $application->update([
+            'status' => $request->status,
+        ]);
+
         $projectTitle = $application->project->title ?? 'the project';
 
-        // Ab notification mein project ka naam bhi shamil hoga
-        Notification::create([
-            'user_id' => $application->user_id,
+        // 2. Sirf aur sirf us student ko notification bheji jaye gi jisne apply kiya tha
+        $notification = Notification::create([
+            'user_id' => $application->user_id, // Yeh student ki ID hai (Admin ki nahi)
             'title'   => 'Application ' . ucfirst($request->status),
             'message' => 'Your application for "' . $projectTitle . '" has been ' . $request->status . '.',
             'is_read' => false,
         ]);
+
+        // 3. Student ke live private channel par broadcast karein
+        broadcast(new NewNotificationEvent($notification));
 
         return redirect()->back()->with('success', 'Application status updated successfully.');
     }

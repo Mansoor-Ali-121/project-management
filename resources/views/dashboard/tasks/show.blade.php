@@ -104,18 +104,15 @@
             cursor: pointer;
             transition: all 0.3s ease;
             background-color: #1a1a1a;
-            /* Base dark background */
             color: #fff;
         }
 
-        /* Dropdown Options Dark Theme Fix */
         .status-dropdown option {
             background-color: #1a1a1a;
             color: #fff;
             padding: 8px;
         }
 
-        /* Todo Status Color */
         .status-dropdown[value="todo"] {
             background-color: rgba(108, 117, 125, 0.2);
             color: #adb5bd;
@@ -126,7 +123,6 @@
             color: #adb5bd;
         }
 
-        /* In Progress Status Color */
         .status-dropdown[value="in_progress"] {
             background-color: rgba(23, 162, 184, 0.2);
             color: #17a2b8;
@@ -137,7 +133,6 @@
             color: #17a2b8;
         }
 
-        /* Completed Status Color */
         .status-dropdown[value="completed"] {
             background-color: rgba(40, 167, 69, 0.2);
             color: #28a745;
@@ -298,7 +293,15 @@
                     <h2 class="custom-show-title">Track Task Progress</h2>
                     <p class="custom-show-subtitle">Monitor assigned tasks, progress status, and deadlines.</p>
                 </div>
-                <a href="{{ route('tasks.add') }}" class="custom-add-btn">+ Assign New Task</a>
+
+                {{-- Sirf Admin ya Project Manager ko Assign New Task ka button dikhega --}}
+                @php
+                    $authUser = auth()->user();
+                @endphp
+
+                @if ($authUser && ($authUser->role === 'admin' || $authUser->role === 'project_manager' || $authUser->is_admin))
+                    <a href="{{ route('tasks.add') }}" class="custom-add-btn">+ Assign New Task</a>
+                @endif
             </div>
 
             <!-- Search & Filter Form Bar -->
@@ -350,7 +353,7 @@
             <div class="custom-table-responsive">
                 <table class="custom-table">
 
-                    {{-- Blade Success Alert Message (agar page redirect se aaye) --}}
+                    {{-- Blade Success Alert Message --}}
                     @if (session('success'))
                         <div
                             style="background-color: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; color: #51cf66; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
@@ -363,16 +366,17 @@
                             <th>#</th>
                             <th>Task Title</th>
                             <th>Project</th>
+                            <th>Description</th>
                             <th>Assigned To</th>
                             <th>Deadline</th>
                             <th>Status</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($tasks as $task)
                             <tr>
                                 <td>{{ $task->id }}</td>
+                                <td>{{ $task->description }}</td>
                                 <td style="font-weight: 600; color: #fff;">{{ $task->title }}</td>
                                 <td>{{ $task->project->title ?? 'N/A' }}</td>
                                 <td>{{ $task->assignee->name ?? 'N/A' }}</td>
@@ -380,28 +384,45 @@
 
                                 <!-- Colorful Status Dropdown Column -->
                                 <td>
-                                    <select class="status-dropdown" data-id="{{ $task->id }}"
-                                        value="{{ $task->status }}">
-                                        <option value="todo" {{ $task->status == 'todo' ? 'selected' : '' }}>Todo
-                                        </option>
-                                        <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>
-                                            In Progress</option>
-                                        <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>
-                                            Completed</option>
-                                    </select>
-                                </td>
+                                    @php
+                                        $authUser = auth()->user();
+                                        $isAdminOrManager =
+                                            $authUser &&
+                                            ($authUser->role === 'admin' ||
+                                                $authUser->role === 'project_manager' ||
+                                                $authUser->is_admin);
+                                    @endphp
 
-                                <!-- Action Column (Sirf Delete) -->
-                                <td>
-                                    <div class="action-btns">
-                                        <form action="#" method="POST"
-                                            onsubmit="return confirm('Are you sure you want to delete this task?');"
-                                            style="margin:0;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn-delete">Delete</button>
-                                        </form>
-                                    </div>
+                                    @if ($isAdminOrManager)
+                                        {{-- Admin aur Project Manager ke liye interactive dropdown --}}
+                                        <select class="status-dropdown" data-id="{{ $task->id }}"
+                                            value="{{ $task->status }}">
+                                            <option value="todo" {{ $task->status == 'todo' ? 'selected' : '' }}>Todo
+                                            </option>
+                                            <option value="in_progress"
+                                                {{ $task->status == 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                                            <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>
+                                                Completed</option>
+                                        </select>
+                                    @else
+                                        {{-- Normal User / Student ke liye sirf read-only text/badge --}}
+                                        @php
+                                            $statusLabels = [
+                                                'todo' => 'Todo',
+                                                'in_progress' => 'In Progress',
+                                                'completed' => 'Completed',
+                                            ];
+                                            $statusColors = [
+                                                'todo' => '#adb5bd',
+                                                'in_progress' => '#17a2b8',
+                                                'completed' => '#28a745',
+                                            ];
+                                        @endphp
+                                        <span
+                                            style="color: {{ $statusColors[$task->status] ?? '#fff' }}; font-weight: 600; font-size: 13px;">
+                                            {{ $statusLabels[$task->status] ?? ucfirst($task->status) }}
+                                        </span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -438,7 +459,6 @@
             let newStatus = $(this).val();
             let dropdown = $(this);
 
-            // Update dropdown attribute immediately for dynamic styling class
             dropdown.attr('value', newStatus);
             dropdown.css('opacity', '0.5');
 
@@ -451,8 +471,6 @@
                 },
                 success: function(response) {
                     dropdown.css('opacity', '1');
-
-                    // Show success alert dynamically
                     $('#ajax-alert-message').text(response.message ||
                         'Task status updated successfully!');
                     $('#ajax-alert').fadeIn(300).delay(2500).fadeOut(300);

@@ -283,47 +283,45 @@
                     <h2 class="custom-show-title">All Projects</h2>
                     <p class="custom-show-subtitle">Manage and monitor all deployed community impact projects.</p>
                 </div>
-                @if(auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->role === 'project_manager' || auth()->user()->is_admin))
+                @if (auth()->check() &&
+                        (auth()->user()->role === 'admin' || auth()->user()->role === 'project_manager' || auth()->user()->is_admin))
                     <a href="{{ route('projects.add') }}" class="custom-add-btn">+ Add New Project</a>
                 @endif
             </div>
 
             <!-- Search & Filter Form Bar -->
-            <form method="GET" action="{{ route('projects.show') }}" style="display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; align-items: center;">
-                
+            <form method="GET" action="{{ route('projects.show') }}"
+                style="display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; align-items: center;">
+
                 <!-- Search Input -->
                 <div style="flex: 1; min-width: 220px;">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by project title..." style="width: 100%; background-color: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px; outline: none;">
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Search by project title..."
+                        style="width: 100%; background-color: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px; outline: none;">
                 </div>
 
                 <!-- Category Filter -->
                 <div style="width: 160px;">
-                    <input type="text" name="category" value="{{ request('category') }}" placeholder="Category..." style="width: 100%; background-color: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px; outline: none;">
+                    <input type="text" name="category" value="{{ request('category') }}" placeholder="Category..."
+                        style="width: 100%; background-color: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px; outline: none;">
                 </div>
 
                 <!-- Location Filter -->
                 <div style="width: 160px;">
-                    <input type="text" name="location" value="{{ request('location') }}" placeholder="Location..." style="width: 100%; background-color: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px; outline: none;">
-                </div>
-
-                <!-- Status Filter Dropdown -->
-                <div style="width: 140px;">
-                    <select name="status" style="width: 100%; background-color: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px; outline: none; cursor: pointer;">
-                        <option value="">All Status</option>
-                        <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="Approved" {{ request('status') == 'Approved' ? 'selected' : '' }}>Approved</option>
-                        <option value="Rejected" {{ request('status') == 'Rejected' ? 'selected' : '' }}>Rejected</option>
-                    </select>
+                    <input type="text" name="location" value="{{ request('location') }}" placeholder="Location..."
+                        style="width: 100%; background-color: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px; outline: none;">
                 </div>
 
                 <!-- Filter Button -->
-                <button type="submit" style="background-color: #d4af37; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; font-size: 13px; cursor: pointer; transition: 0.3s;">
+                <button type="submit"
+                    style="background-color: #d4af37; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; font-size: 13px; cursor: pointer; transition: 0.3s;">
                     Filter
                 </button>
 
                 <!-- Reset Button -->
-                @if(request()->anyFilled(['search', 'category', 'location', 'status']))
-                    <a href="{{ route('projects.show') }}" style="background-color: #222; color: #aaa; border: 1px solid #444; padding: 10px 15px; border-radius: 6px; font-size: 13px; text-decoration: none; transition: 0.3s; display: inline-flex; align-items: center;">
+                @if (request()->anyFilled(['search', 'category', 'location', 'status']))
+                    <a href="{{ route('projects.show') }}"
+                        style="background-color: #222; color: #aaa; border: 1px solid #444; padding: 10px 15px; border-radius: 6px; font-size: 13px; text-decoration: none; transition: 0.3s; display: inline-flex; align-items: center;">
                         Reset
                     </a>
                 @endif
@@ -335,18 +333,18 @@
 
                     {{-- Success Alert Message --}}
                     @if (session('success'))
-                        <div style="background-color: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; color: #51cf66; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
+                        <div
+                            style="background-color: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; color: #51cf66; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
                             <i class="fas fa-check-circle" style="margin-right: 8px;"></i> {{ session('success') }}
                         </div>
                     @endif
-                    
+
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Title</th>
                             <th>Category</th>
                             <th>Location</th>
-                            <th>Status</th>
                             <th>Deadline</th>
                             <th>Action</th>
                         </tr>
@@ -358,16 +356,11 @@
                                 <td style="font-weight: 600; color: #fff;">{{ $project->title }}</td>
                                 <td>{{ $project->category }}</td>
                                 <td>{{ $project->location }}</td>
-                                <td>
-                                    <span class="badge badge-{{ strtolower($project->status) }}">
-                                        {{ $project->status }}
-                                    </span>
-                                </td>
                                 <td>{{ $project->deadline }}</td>
                                 <td>
                                     <div class="action-btns">
                                         @auth
-                                            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'project_manager' || auth()->user()->is_admin)
+                                            @if (auth()->user()->role === 'admin' || auth()->user()->role === 'project_manager' || auth()->user()->is_admin)
                                                 <!-- Edit Button -->
                                                 <a href="{{ route('projects.edit', $project->id) }}" class="btn-edit">Edit</a>
 
@@ -382,17 +375,21 @@
                                             @else
                                                 <!-- Student / Volunteer View -->
                                                 @php
-                                                    $existingApplication = \App\Models\ProjectApplication::where('project_id', $project->id)
-                                                                            ->where('user_id', auth()->id())
-                                                                            ->first();
+                                                    $existingApplication = \App\Models\ProjectApplication::where(
+                                                        'project_id',
+                                                        $project->id,
+                                                    )
+                                                        ->where('user_id', auth()->id())
+                                                        ->first();
                                                 @endphp
 
-                                                @if($existingApplication)
+                                                @if ($existingApplication)
                                                     <span class="badge badge-{{ strtolower($existingApplication->status) }}">
                                                         {{ ucfirst($existingApplication->status) }}
                                                     </span>
                                                 @else
-                                                    <form action="{{ url('/applications/add') }}" method="POST" style="margin: 0;">
+                                                    <form action="{{ url('/applications/add') }}" method="POST"
+                                                        style="margin: 0;">
                                                         @csrf
                                                         <input type="hidden" name="project_id" value="{{ $project->id }}">
                                                         <input type="hidden" name="user_id" value="{{ auth()->id() }}">
@@ -421,7 +418,8 @@
             @if (isset($projects) && method_exists($projects, 'hasPages') && $projects->count() > 0)
                 <div class="pagination-footer">
                     <div class="pagination-info">
-                        Showing {{ $projects->firstItem() }} to {{ $projects->lastItem() }} of {{ $projects->total() }} results
+                        Showing {{ $projects->firstItem() }} to {{ $projects->lastItem() }} of {{ $projects->total() }}
+                        results
                     </div>
                     <div class="pagination-container">
                         {{ $projects->appends(request()->query())->links() }}

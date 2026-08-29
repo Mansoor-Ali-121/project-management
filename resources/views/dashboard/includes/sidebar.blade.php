@@ -140,20 +140,51 @@
             {{-- Reports & Impact (Sirf Admin aur Manager ke liye) --}}
             @if (auth()->user() && in_array(auth()->user()->role, ['admin', 'project_manager']))
                 <li class="{{ request()->routeIs('reports*') ? 'active' : '' }}" style="margin-bottom: 5px;">
-                    <a href="{{route('impact.reports')}}"
+                    <a href="{{ route('impact.reports') }}"
                         style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; color: #ccc; text-decoration: none;">
                         <i class="fas fa-chart-line"></i> <span>Impact Reports</span>
                     </a>
                 </li>
             @endif
 
-            {{-- Notifications (Sab ke liye) --}}
+            {{-- Notifications (role base) --}}
             <li class="{{ request()->routeIs('notifications*') ? 'active' : '' }}" style="margin-bottom: 5px;">
                 <a href="{{ route('notifications.index') }}"
-                    style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; color: #ccc; text-decoration: none;">
-                    <i class="fas fa-bell"></i> <span>Notifications</span>
+                    style="display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; color: #ccc; text-decoration: none;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <i class="fas fa-bell"></i> <span>Notifications</span>
+                    </div>
+
+                    {{-- Unread Badge (Dynamic Count) --}}
+                    @php
+                        $unreadCount = \App\Models\Notification::where('user_id', auth()->id())
+                            ->where('is_read', false)
+                            ->count();
+                    @endphp
+
+                    <span id="notification-badge"
+                        style="background-color: #d4af37; color: #121212; font-size: 11px; font-weight: bold; padding: 2px 7px; border-radius: 10px; {{ $unreadCount == 0 ? 'display: none;' : '' }}">
+                        {{ $unreadCount }}
+                    </span>
                 </a>
             </li>
+
+            {{-- Real-time Reverb Listener Script (Isay aap template layout ya yahin rakh sakte hain) --}}
+            <script>
+                @auth
+                window.Echo.private('App.Models.User.{{ auth()->id() }}')
+                    .listen('NewNotificationEvent', (e) => {
+                        const badge = document.getElementById('notification-badge');
+                        if (badge) {
+                            // Badge ko visible karein aur count mein 1 ka izafa karein
+                            let currentCount = parseInt(badge.innerText) || 0;
+                            currentCount++;
+                            badge.innerText = currentCount;
+                            badge.style.display = 'inline-block';
+                        }
+                    });
+                @endauth
+            </script>
         </ul>
     </div>
 

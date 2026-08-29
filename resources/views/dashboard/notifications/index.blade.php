@@ -153,7 +153,7 @@
                     <form action="{{ route('notifications.markAllRead') }}" method="POST">
                         @csrf
                         <button type="submit" class="custom-action-btn">
-                            <i class="fas fa-check-double"></i> Mark All as Read
+                            <i class="fas fa-trash"></i> Clear All 
                         </button>
                     </form>
                 @endif
