@@ -3,8 +3,7 @@
     <div class="sidebar-top">
         <!-- USER PROFILE -->
         <div class="sidebar-top-profile">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=faces"
-                alt="User Avatar">
+            <img src="{{ asset(Auth::user()->profile_picture) }}" alt="User Avatar">
             <h3>{{ auth()->user()->name ?? 'Mansoor Ali' }}</h3>
             <p>{{ ucfirst(auth()->user()->role ?? 'Admin') }}</p>
         </div>

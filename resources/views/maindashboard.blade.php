@@ -1,146 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
-
-@include('dashboard.includes.head')
-
-<body>
-
-    @include('dashboard.includes.sidebar')
-
+@extends('template')
+@section('main-content')
     <!-- MAIN CONTENT -->
-    <div class="main-content">
-        <div class="container">
+    <div class="container">
 
-            <!-- Executive Welcome Banner -->
-            <div class="welcome-banner">
-                <div>
-                    <h1>Welcome Back, <span>Mansoor</span></h1>
-                    <p>Managing full-stack web applications, database migrations, and client architectures.</p>
+        <!-- Executive Welcome Banner -->
+        <div class="welcome-banner">
+            <div>
+                <h1>Welcome Back, <span>{{ auth()->user()->name ?? 'Mansoor' }}</span></h1>
+                <p>Managing full-stack web applications, database migrations, and client architectures.</p>
+            </div>
+            <div>
+                <a href="{{ route('projects.show') }}" class="btn-gold">View Projects</a>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-project-diagram"></i></div>
+                <h3>{{ $activeProjectsCount ?? '6' }}</h3>
+                <p>Active Projects</p>
+            </div>
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-tasks"></i></div>
+                <h3>{{ $pendingTasksCount ?? '24' }}</h3>
+                <p>Pending Tasks</p>
+            </div>
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-server"></i></div>
+                <h3>100%</h3>
+                <p>Server Uptime</p>
+            </div>
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-database"></i></div>
+                <h3>Synced</h3>
+                <p>Database Status</p>
+            </div>
+        </div>
+
+        <!-- Analytics & Revenue Section -->
+        <div class="analytics-grid">
+
+            <!-- Project Progress Analytics Card -->
+            <div class="chart-card">
+                <div class="section-title">
+                    <span><i class="fas fa-chart-line"></i> Development Workflow Analytics</span>
+                    <span style="font-size: 0.8rem; color: var(--gold);">2026 Cycle</span>
                 </div>
-                <div>
-                    <a href="{{ route('projects.show') }}" class="btn-gold">View Projects</a>
+                <div class="bar-chart">
+                    @php
+                        $months = [
+                            'Jan' => 1,
+                            'Feb' => 2,
+                            'Mar' => 3,
+                            'Apr' => 4,
+                            'May' => 5,
+                            'Jun' => 6,
+                        ];
+                    @endphp
+
+                    @foreach ($months as $label => $mNum)
+                        <div class="bar-group">
+                            <div class="bar"
+                                style="height: {{ isset($chartHeights[$mNum]) ? $chartHeights[$mNum] : '60' }}%;"></div>
+                            <span class="bar-label">{{ $label }}</span>
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-project-diagram"></i></div>
-                    <h3>{{ $activeProjectsCount ?? '6' }}</h3>
-                    <p>Active Projects</p>
+            <!-- System Health & Overview Card -->
+            <div class="revenue-card">
+                <div class="section-title">
+                    <span><i class="fas fa-server"></i> System Metrics</span>
                 </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-tasks"></i></div>
-                    <h3>{{ $pendingTasksCount ?? '24' }}</h3>
-                    <p>Pending Tasks</p>
-                </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-server"></i></div>
-                    <h3>100%</h3>
-                    <p>Server Uptime</p>
-                </div>
-                <div class="stat-card">
-                    <div class="icon"><i class="fas fa-database"></i></div>
-                    <h3>Synced</h3>
-                    <p>Database Status</p>
+                <div class="payment-stats">
+                    <div class="payment-item">
+                        <span>API Endpoints</span>
+                        <span class="amount" style="color: #4ade80;">{{ $apiStatus ?? 'OPTIMIZED' }}</span>
+                    </div>
+                    <div class="payment-item">
+                        <span>Database Tables</span>
+                        <span class="amount" style="color: #4ade80;">CONNECTED</span>
+                    </div>
+                    <div class="payment-item">
+                        <span>Environment</span>
+                        <span class="amount" style="color: var(--gold);">{{ $environment ?? 'PRODUCTION' }}</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Analytics & Revenue Section -->
-            <div class="analytics-grid">
+        </div>
 
-                <!-- Project Progress Analytics Card -->
-                <div class="chart-card">
-                    <div class="section-title">
-                        <span><i class="fas fa-chart-line"></i> Development Workflow Analytics</span>
-                        <span style="font-size: 0.8rem; color: var(--gold);">2026 Cycle</span>
-                    </div>
-                    <div class="bar-chart">
-                        <div class="bar-group">
-                            <div class="bar" style="height: 60%;"></div>
-                            <span class="bar-label">Jan</span>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar" style="height: 75%;"></div>
-                            <span class="bar-label">Feb</span>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar" style="height: 85%;"></div>
-                            <span class="bar-label">Mar</span>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar" style="height: 70%;"></div>
-                            <span class="bar-label">Apr</span>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar" style="height: 90%;"></div>
-                            <span class="bar-label">May</span>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar" style="height: 95%;"></div>
-                            <span class="bar-label">Jun</span>
-                        </div>
-                    </div>
+        <!-- Quick Actions & Recent Tasks Section -->
+        <div class="extra-grid">
+
+            <!-- Quick Management Actions -->
+            <div class="action-card">
+                <div class="section-title">
+                    <span><i class="fas fa-bolt"></i> Quick Actions</span>
                 </div>
-
-                <!-- System Health & Overview Card -->
-                <div class="revenue-card">
-                    <div class="section-title">
-                        <span><i class="fas fa-server"></i> System Metrics</span>
-                    </div>
-                    <div class="payment-stats">
-                        <div class="payment-item">
-                            <span>API Endpoints</span>
-                            <span class="amount" style="color: #4ade80;">OPTIMIZED</span>
-                        </div>
-                        <div class="payment-item">
-                            <span>Pending Migrations</span>
-                            <span class="amount">0 Queued</span>
-                        </div>
-                        <div class="payment-item">
-                            <span>Environment</span>
-                            <span class="amount" style="color: var(--gold);">PRODUCTION</span>
-                        </div>
-                    </div>
+                <div class="quick-actions-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <a href="{{ route('projects.add') }}" class="action-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>New Project</span>
+                    </a>
+                    <a href="{{ route('admin.clear-cache') }}" class="action-btn">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Clear Cache</span>
+                    </a>
+                    <a href="#" class="action-btn" onclick="event.preventDefault(); alert('Exporting reports...');"
+                        style="grid-column: span 2; justify-self: center; width: 50%;">
+                        <i class="fas fa-file-export"></i>
+                        <span>Export Report</span>
+                    </a>
                 </div>
-
             </div>
 
-            <!-- Quick Actions & Recent Tasks Section -->
-            <div class="extra-grid">
-
-                <!-- Quick Management Actions -->
-                <div class="action-card">
-                    <div class="section-title">
-                        <span><i class="fas fa-bolt"></i> Quick Actions</span>
-                    </div>
-                    <div class="quick-actions-grid">
-                        <a href="{{ route('projects.add') }}" class="action-btn">
-                            <i class="fas fa-plus-circle"></i>
-                            <span>New Project</span>
-                        </a>
-                        <a href="#" class="action-btn" onclick="event.preventDefault(); alert('Cache cleared successfully!');">
-                            <i class="fas fa-sync-alt"></i>
-                            <span>Clear Cache</span>
-                        </a>
-                        <a href="#" class="action-btn" onclick="event.preventDefault(); alert('Exporting reports...');">
-                            <i class="fas fa-file-export"></i>
-                            <span>Export Report</span>
-                        </a>
-                        <a href="#" class="action-btn" onclick="event.preventDefault(); alert('Artisan migration triggered!');">
-                            <i class="fas fa-terminal"></i>
-                            <span>Run Migration</span>
-                        </a>
-                    </div>
+            <!-- Recent Tasks / Active Repos List -->
+            <div class="orders-card">
+                <div class="section-title">
+                    <span><i class="fas fa-tasks"></i> Recent Tasks & Repos</span>
+                    <a href="{{ route('projects.show') }}"
+                        style="font-size: 0.8rem; color: var(--gold); text-decoration: none;">View All</a>
                 </div>
-
-                <!-- Recent Tasks / Active Repos List -->
-                <div class="orders-card">
-                    <div class="section-title">
-                        <span><i class="fas fa-tasks"></i> Recent Tasks & Repos</span>
-                        <a href="{{ route('projects.show') }}" style="font-size: 0.8rem; color: var(--gold); text-decoration: none;">View All</a>
-                    </div>
-                    <div class="orders-list">
+                <div class="orders-list">
+                    @forelse($recentTasks ?? [] as $task)
+                        <div class="order-item">
+                            <div class="order-content">
+                                <div class="order-info">
+                                    <h4>{{ $task->title }}</h4>
+                                    <p>Module: {{ $task->project->title ?? 'General Tasks' }}</p>
+                                </div>
+                                <div class="order-meta">
+                                    <span class="price"
+                                        style="color: {{ $task->status == 'completed' ? '#4ade80' : 'var(--gold)' }}; font-size: 0.85rem;">
+                                        {{ ucfirst(str_replace('_', ' ', $task->status)) }}
+                                    </span>
+                                    <span class="status">{{ $task->deadline ?? 'Active' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
                         <div class="order-item">
                             <div class="order-content">
                                 <div class="order-info">
@@ -177,15 +178,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endforelse
                 </div>
-
             </div>
 
         </div>
-        @include('dashboard.includes.footer')
     </div>
-
-</body>
-
-</html>
+@endsection
